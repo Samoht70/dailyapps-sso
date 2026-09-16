@@ -37,15 +37,15 @@ repos:
 
   - dir: api
     url: https://github.com/Samoht70/dailyapps-sso-api.git
-    trunk: main
+    trunk: staging
     stack: Laravel
 
   - dir: front
     url: https://github.com/Samoht70/dailyapps-sso-front.git
-    trunk: main
+    trunk: staging
     stack: Nuxt
 
   - dir: mobile
     url: https://github.com/Samoht70/dailyapps-sso-mobile.git
-    trunk: main
+    trunk: staging
     stack: Flutter

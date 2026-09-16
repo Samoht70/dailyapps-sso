@@ -77,6 +77,16 @@ A child with no `CLAUDE.md` is a gap, not permission to guess. Say so, and offer
 to create one — `boost:install` for a Laravel repo, `/init` otherwise — rather
 than inferring conventions from whatever the existing code happens to do.
 
+## `staging` is the trunk, `main` is the release branch
+
+Every repo declares `trunk: staging` in `repos.yml`, so `speckit.multirepo.branch`
+cuts each feature branch from `staging`, not from `main`. A feature lands on
+`staging` first; `main` only ever moves by fast-forwarding `staging` into it once
+the work is considered releasable.
+
+Never open a feature branch from `main`, and never merge a feature into `main`
+directly.
+
 ## Landing a feature that spans several repos
 
 A feature touching the api and the mobile app produces two independent commits
