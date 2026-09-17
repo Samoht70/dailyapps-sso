@@ -274,23 +274,23 @@ vérifier l'autre ; puis désactiver un compte avec des sessions ouvertes et mes
 
 ### Tests for User Story 5
 
-- [ ] T113 [P] [US5] Feature test dans `api/technical/oidc/tests/Feature/GlobalLogoutTest.php` : deux applications ouvertes, déconnexion depuis l'une → l'autre ne reconnaît plus l'utilisateur à l'action suivante
-- [ ] T114 [P] [US5] Feature test dans `api/technical/oidc/tests/Feature/BackchannelLogoutPushTest.php` : à la désactivation d'un compte, la poussée part vers **chaque participant** de la session et l'accès est refusé en moins d'une minute
-- [ ] T115 [P] [US5] Feature test dans `api/technical/oidc/tests/Feature/LogoutPushFailureTest.php` : une `backchannel_logout_url` injoignable est journalisée en `logout_push_failed` et **ne bloque pas** les autres applications, qui sont prévenues quand même
-- [ ] T116 [P] [US5] Feature test dans `api/technical/oidc/tests/Feature/RefreshTokenRevalidationTest.php` : compte désactivé, organisation suspendue ou licence tombée → `invalid_grant` au rafraîchissement
-- [ ] T117 [P] [US5] Feature test dans `api/technical/oidc/tests/Feature/SessionExpiryTest.php` : inactivité au-delà de la durée → réidentification exigée ; expiration absolue atteinte → idem
+- [X] T113 [P] [US5] Feature test dans `api/technical/oidc/tests/Feature/GlobalLogoutTest.php` : deux applications ouvertes, déconnexion depuis l'une → l'autre ne reconnaît plus l'utilisateur à l'action suivante
+- [X] T114 [P] [US5] Feature test dans `api/technical/oidc/tests/Feature/BackchannelLogoutPushTest.php` : à la désactivation d'un compte, la poussée part vers **chaque participant** de la session et l'accès est refusé en moins d'une minute
+- [X] T115 [P] [US5] Feature test dans `api/technical/oidc/tests/Feature/LogoutPushFailureTest.php` : une `backchannel_logout_url` injoignable est journalisée en `logout_push_failed` et **ne bloque pas** les autres applications, qui sont prévenues quand même
+- [X] T116 [P] [US5] Feature test dans `api/technical/oidc/tests/Feature/RefreshTokenRevalidationTest.php` : compte désactivé, organisation suspendue ou licence tombée → `invalid_grant` au rafraîchissement
+- [X] T117 [P] [US5] Feature test dans `api/technical/oidc/tests/Feature/SessionExpiryTest.php` : inactivité au-delà de la durée → réidentification exigée ; expiration absolue atteinte → idem
 
 ### Implementation for User Story 5
 
-- [ ] T118 [US5] Route `POST /logout` dans `api/technical/oidc/routes/web.php` : ferme la session Laravel, marque la `SsoSession` révoquée et met en file la poussée vers chaque participant. Une application la déclenche en y renvoyant l'utilisateur (FR-034)
-- [ ] T119 [US5] Enregistrement d'un `SsoSessionParticipant` à chaque autorisation réussie — c'est la liste exacte des applications à prévenir (FR-035) — `api/technical/oidc/src/Listeners/RecordSessionParticipant.php`
-- [ ] T120 [US5] Construction du `logout_token` signé dans `api/technical/oidc/src/Actions/BuildLogoutToken.php` : claims `iss`, `aud`, `iat`, `jti`, `sid`, `sub`, `events: { "http://schemas.openid.net/event/backchannel-logout": {} }` et `reason` parmi `logout`, `user_disabled`, `organization_suspended`, `license_revoked`, `password_changed`
-- [ ] T121 [US5] Job de poussée dans `api/technical/oidc/src/Jobs/PushBackchannelLogout.php` : `POST` vers `application.backchannel_logout_url` en `Content-Type: application/jwt`, réessais exponentiels, ordonnancement déterministe, échec définitif journalisé en `logout_push_failed`. Une application injoignable ne bloque pas les autres
-- [ ] T122 [US5] Brancher les cinq déclencheurs sur la poussée et la révocation des jetons : déconnexion (FR-034), désactivation de compte (FR-036), suspension d'organisation (FR-021), résiliation de licence (FR-023), changement de mot de passe (FR-012) — listeners dans `api/technical/oidc/src/Listeners/` et `api/functional/*/src/Listeners/`, déclarés dans les service providers de couche
-- [ ] T123 [US5] Révocation des jetons Passport concernés en même temps que la poussée — un `access_token` JWT validé localement via le JWKS ne voit jamais sa révocation en base, d'où la poussée — `api/technical/oidc/src/Actions/RevokeSessionTokens.php`
-- [ ] T124 [US5] Revalidation de l'état du compte, de l'organisation **et** de la licence à chaque usage d'un `refresh_token` : l'une des trois est tombée → `invalid_grant`, et l'application doit renvoyer vers `/oauth/authorize` — `api/technical/oidc/src/Listeners/RevalidateOnRefresh.php`
-- [ ] T125 [US5] Application sans `backchannel_logout_url` : comportement explicite et journalisé — elle ne reçoit pas la poussée et ne tient que par la durée de vie du jeton, limite assumée de SC-005 — `api/technical/oidc/src/Jobs/PushBackchannelLogout.php`
-- [ ] T126 [US5] `SecurityEvent` `session_ended` et `logout_push_failed` émis depuis `api/technical/oidc/src/Jobs/PushBackchannelLogout.php` et `api/technical/oidc/src/Actions/`
+- [X] T118 [US5] Route `POST /logout` dans `api/technical/oidc/routes/web.php` : ferme la session Laravel, marque la `SsoSession` révoquée et met en file la poussée vers chaque participant. Une application la déclenche en y renvoyant l'utilisateur (FR-034)
+- [X] T119 [US5] Enregistrement d'un `SsoSessionParticipant` à chaque autorisation réussie — c'est la liste exacte des applications à prévenir (FR-035) — `api/technical/oidc/src/Listeners/RecordSessionParticipant.php`
+- [X] T120 [US5] Construction du `logout_token` signé dans `api/technical/oidc/src/Actions/BuildLogoutToken.php` : claims `iss`, `aud`, `iat`, `jti`, `sid`, `sub`, `events: { "http://schemas.openid.net/event/backchannel-logout": {} }` et `reason` parmi `logout`, `user_disabled`, `organization_suspended`, `license_revoked`, `password_changed`
+- [X] T121 [US5] Job de poussée dans `api/technical/oidc/src/Jobs/PushBackchannelLogout.php` : `POST` vers `application.backchannel_logout_url` en `Content-Type: application/jwt`, réessais exponentiels, ordonnancement déterministe, échec définitif journalisé en `logout_push_failed`. Une application injoignable ne bloque pas les autres
+- [X] T122 [US5] Brancher les cinq déclencheurs sur la poussée et la révocation des jetons : déconnexion (FR-034), désactivation de compte (FR-036), suspension d'organisation (FR-021), résiliation de licence (FR-023), changement de mot de passe (FR-012) — listeners dans `api/technical/oidc/src/Listeners/` et `api/functional/*/src/Listeners/`, déclarés dans les service providers de couche
+- [X] T123 [US5] Révocation des jetons Passport concernés en même temps que la poussée — un `access_token` JWT validé localement via le JWKS ne voit jamais sa révocation en base, d'où la poussée — `api/technical/oidc/src/Actions/RevokeSessionTokens.php`
+- [X] T124 [US5] Revalidation de l'état du compte, de l'organisation **et** de la licence à chaque usage d'un `refresh_token` : l'une des trois est tombée → `invalid_grant`, et l'application doit renvoyer vers `/oauth/authorize` — `api/technical/oidc/src/Listeners/RevalidateOnRefresh.php`
+- [X] T125 [US5] Application sans `backchannel_logout_url` : comportement explicite et journalisé — elle ne reçoit pas la poussée et ne tient que par la durée de vie du jeton, limite assumée de SC-005 — `api/technical/oidc/src/Jobs/PushBackchannelLogout.php`
+- [X] T126 [US5] `SecurityEvent` `session_ended` et `logout_push_failed` émis depuis `api/technical/oidc/src/Jobs/PushBackchannelLogout.php` et `api/technical/oidc/src/Actions/`
 
 **Checkpoint**: les cinq histoires sont livrées et testables indépendamment.
 
