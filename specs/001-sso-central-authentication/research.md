@@ -316,3 +316,25 @@ propre. Le squelette Flutter attend la première application métier. À noter p
 `speckit.multirepo.branch`, qui branche par défaut tous les dépôts déclarés : depuis le retrait du
 `front`, `repos.yml` en déclare deux, et la feature n'en concerne qu'un — `api`. Aucun commit ne doit
 atterrir dans `mobile`.
+
+## D15 — Type des identifiants des modèles
+
+**Décision** : tous les modèles de la feature portent un `id` **UUID**, via le trait `HasUuids`
+d'Eloquent et une colonne `$table->uuid('id')->primary()`. Remplace l'ULID que `data-model.md`
+retenait sans l'argumenter.
+
+**Rationale** : trois raisons, aucune ne coûte quoi que ce soit ici puisque rien n'est encore
+implémenté sur ce point.
+
+`oauth_clients.id`, la table livrée par Passport et que nous ne contrôlons pas, est déjà un `uuid`.
+Des ULID côté domaine auraient posé deux familles d'identifiants dans le même schéma, dont une
+frontière — `applications.oauth_client_id` — où elles se touchent.
+
+Le trait `HasUuids` de Laravel 13 génère des **UUID v7** (`Str::uuid7()`), donc horodatés et
+monotones. La localité d'index qui motive habituellement l'ULID est conservée : pas de
+fragmentation sur les tables qui grossissent, `security_events` en tête. C'est `HasVersion4Uuids`
+qu'il faut éviter, et qui n'est utilisé nulle part.
+
+L'UUID est enfin le format que les applications raccordées savent lire sans conversion, et les
+identifiants de cette feature traversent la frontière : `sso_sessions.id` est publié tel quel comme
+claim `sid`.

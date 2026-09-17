@@ -38,7 +38,7 @@ périmètre d'accès uniforme pour tout le monde.
 
 | Champ | Type | Règles |
 |-------|------|--------|
-| `id` | ULID | |
+| `id` | UUID | |
 | `name` | string(160) | requis, unique |
 | `kind` | `OrganizationKind` | `operator` \| `client` — exactement une ligne `operator`, garantie par un index unique partiel |
 | `status` | `OrganizationStatus` | `active` \| `suspended`, défaut `active` |
@@ -68,7 +68,7 @@ Cette feature y ajoute le rattachement, l'état et le rôle dans l'organisation.
 
 | Champ | Type | Règles |
 |-------|------|--------|
-| `id` | ULID | |
+| `id` | UUID | |
 | `organization_id` | FK Organization | **requis** — FR-025, exactement une organisation |
 | `name` | string(160) | requis |
 | `email` | string(255) | requis, **unique globalement** — FR-026 : une adresse déjà rattachée ne peut pas être invitée ailleurs |
@@ -108,7 +108,7 @@ sinon le décompte de FR-024 se contourne en invitant en masse).
 
 | Champ | Type | Règles |
 |-------|------|--------|
-| `id` | ULID | |
+| `id` | UUID | |
 | `email` | string(255) | requis ; refusée si l'adresse est déjà rattachée (FR-026) |
 | `organization_id` | FK Organization | requis |
 | `organization_role` | `OrganizationRole` | |
@@ -135,7 +135,7 @@ elles vivent dans `oauth_clients.redirect_uris` de Passport, qui est ce qui les 
 
 | Champ | Type | Règles |
 |-------|------|--------|
-| `id` | ULID | |
+| `id` | UUID | |
 | `slug` | string(64) | requis, unique, kebab-case — l'identifiant stable, porté dans les claims |
 | `name` | string(160) | requis |
 | `description` | text? | |
@@ -163,7 +163,7 @@ tierce.
 
 | Champ | Type | Règles |
 |-------|------|--------|
-| `id` | ULID | |
+| `id` | UUID | |
 | `application_id` | FK Application | |
 | `key` | string(64) | kebab-case, unique **par application** — deux applications peuvent exposer `manager` sans collision |
 | `label` | string(160) | requis |
@@ -180,7 +180,7 @@ Retirer un rôle encore attribué détache l'attribution correspondante, via un 
 
 | Champ | Type | Règles |
 |-------|------|--------|
-| `id` | ULID | |
+| `id` | UUID | |
 | `organization_id` | FK Organization | |
 | `application_id` | FK Application | |
 | `starts_on` | date | requis |
@@ -203,7 +203,7 @@ FR-019 et FR-023.
 
 | Champ | Type | Règles |
 |-------|------|--------|
-| `id` | ULID | |
+| `id` | UUID | |
 | `user_id` | FK User | |
 | `application_id` | FK Application | |
 | `granted_by_id` | FK User? | qui l'a accordé — FR-038, SC-009 |
@@ -232,7 +232,7 @@ déconnexion de désigner précisément la session à fermer.
 
 | Champ | Type | Règles |
 |-------|------|--------|
-| `id` | ULID | devient le `sid` |
+| `id` | UUID | devient le `sid` |
 | `user_id` | FK User | |
 | `laravel_session_id` | string? | la session navigateur du front |
 | `ip_address` | string? | |
@@ -263,7 +263,7 @@ une seule fois (D12).
 
 | Champ | Type | Règles |
 |-------|------|--------|
-| `id` | ULID | |
+| `id` | UUID | |
 | `type` | `SecurityEventType` | voir la liste ci-dessous |
 | `actor_id` | FK User? | nul quand l'auteur n'est pas identifié — un échec d'identification, par exemple |
 | `organization_id` | FK Organization? | porte le périmètre de lecture de FR-038 |
