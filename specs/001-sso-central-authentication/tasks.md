@@ -173,20 +173,20 @@ application ne tienne son annuaire.
 
 ### Tests for User Story 2
 
-- [ ] T067 [P] [US2] Feature test de `/me/applications` dans `api/functional/licensing/tests/Feature/MyApplicationsTest.php` : trois licences et deux accès → exactement ces deux applications ; aucun droit → `200` avec `data: []`, **jamais une erreur** ; licence expirée → application absente
-- [ ] T068 [P] [US2] Feature test des claims dans `api/technical/oidc/tests/Feature/IdTokenClaimsTest.php` : `roles` ne contient que les rôles de **l'application appelante**, `sid` présent, `organization` présent sous le scope `profile`
-- [ ] T069 [P] [US2] Feature test des refus hors périmètre dans `api/technical/oidc/tests/Feature/ScopeIsolationTest.php` : une application qui demande les rôles d'un tiers ou les accès sur une autre application est refusée (FR-017)
+- [X] T067 [P] [US2] Feature test de `/me/applications` dans `api/functional/licensing/tests/Feature/MyApplicationsTest.php` : trois licences et deux accès → exactement ces deux applications ; aucun droit → `200` avec `data: []`, **jamais une erreur** ; licence expirée → application absente
+- [X] T068 [P] [US2] Feature test des claims dans `api/technical/oidc/tests/Feature/IdTokenClaimsTest.php` : `roles` ne contient que les rôles de **l'application appelante**, `sid` présent, `organization` présent sous le scope `profile`
+- [X] T069 [P] [US2] Feature test des refus hors périmètre dans `api/technical/oidc/tests/Feature/ScopeIsolationTest.php` : une application qui demande les rôles d'un tiers ou les accès sur une autre application est refusée (FR-017)
 
 ### Implementation for User Story 2
 
-- [ ] T070 [US2] Fournisseur de claims implémentant le contrat T038, dans `api/functional/licensing/src/Oidc/LicensingClaimsProvider.php`, enregistré par `LicensingServiceProvider` — c'est le fonctionnel qui se branche sur le technique
-- [ ] T071 [US2] Claim `organization` (`{ id, name }` de l'organisation de rattachement) sous le scope `profile`, dans `api/functional/licensing/src/Oidc/LicensingClaimsProvider.php`
-- [ ] T072 [US2] Claim `roles` sous le scope `applications`, réduit aux clés des rôles détenus **sur l'application appelante uniquement** (FR-016, FR-017), dans `api/functional/licensing/src/Oidc/LicensingClaimsProvider.php`
-- [ ] T073 [US2] Déclarer les scopes `openid`, `profile`, `email`, `applications` dans `api/technical/oidc/config/`
-- [ ] T074 [US2] Endpoint `GET /me/applications` dans `api/functional/licensing/src/Http/Controllers/MyApplicationsController.php` et sa route dans `api/routes/api.php` — **contrôleur écrit à la main, pas une ressource lomkit** : la réponse croise licence valide (T028), accès attribué, état du compte et état de l'organisation, et ne projette aucune table. Renvoie `slug`, `name`, `logo_url`, `home_url` (FR-015)
-- [ ] T075 [US2] `/oauth/userinfo` renvoyant les mêmes claims filtrés par les scopes accordés, dans `api/technical/oidc/src/Http/Controllers/UserInfoController.php`
-- [ ] T076 [US2] Aucune mise en cache de la réponse de droits : toute modification est reflétée dès la demande suivante (FR-019) — à vérifier dans `api/functional/licensing/src/Http/Controllers/MyApplicationsController.php` et `api/functional/licensing/src/Oidc/LicensingClaimsProvider.php`
-- [ ] T077 [US2] Endpoints `GET /me` et `PATCH /me` dans `api/functional/users/src/Http/Controllers/ProfileController.php` — l'écran `/account` sert l'utilisateur devant son navigateur, ces endpoints servent une application agissant en son nom avec un `access_token`
+- [X] T070 [US2] Fournisseur de claims implémentant le contrat T038, dans `api/functional/licensing/src/Oidc/LicensingClaimsProvider.php`, enregistré par `LicensingServiceProvider` — c'est le fonctionnel qui se branche sur le technique
+- [X] T071 [US2] Claim `organization` (`{ id, name }` de l'organisation de rattachement) sous le scope `profile`, dans `api/functional/licensing/src/Oidc/LicensingClaimsProvider.php`
+- [X] T072 [US2] Claim `roles` sous le scope `applications`, réduit aux clés des rôles détenus **sur l'application appelante uniquement** (FR-016, FR-017), dans `api/functional/licensing/src/Oidc/LicensingClaimsProvider.php`
+- [X] T073 [US2] Déclarer les scopes `openid`, `profile`, `email`, `applications` dans `api/technical/oidc/config/`
+- [X] T074 [US2] Endpoint `GET /me/applications` dans `api/functional/licensing/src/Http/Controllers/MyApplicationsController.php` et sa route dans `api/routes/api.php` — **contrôleur écrit à la main, pas une ressource lomkit** : la réponse croise licence valide (T028), accès attribué, état du compte et état de l'organisation, et ne projette aucune table. Renvoie `slug`, `name`, `logo_url`, `home_url` (FR-015)
+- [X] T075 [US2] `/oauth/userinfo` renvoyant les mêmes claims filtrés par les scopes accordés, dans `api/technical/oidc/src/Http/Controllers/UserInfoController.php`
+- [X] T076 [US2] Aucune mise en cache de la réponse de droits : toute modification est reflétée dès la demande suivante (FR-019) — à vérifier dans `api/functional/licensing/src/Http/Controllers/MyApplicationsController.php` et `api/functional/licensing/src/Oidc/LicensingClaimsProvider.php`
+- [X] T077 [US2] Endpoints `GET /me` et `PATCH /me` dans `api/functional/users/src/Http/Controllers/ProfileController.php` — l'écran `/account` sert l'utilisateur devant son navigateur, ces endpoints servent une application agissant en son nom avec un `access_token`
 
 **Checkpoint**: US1 et US2 fonctionnent chacune indépendamment.
 
