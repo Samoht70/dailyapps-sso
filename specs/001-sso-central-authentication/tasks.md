@@ -298,12 +298,12 @@ vérifier l'autre ; puis désactiver un compte avec des sessions ouvertes et mes
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T127 [P] Revue des fichiers de traduction `api/technical/oidc/lang/` et des couches fonctionnelles — aucun texte utilisateur en dur nulle part
-- [ ] T128 [P] Formater tout le diff depuis `api/` : `./vendor/bin/sail exec laravel.test vendor/bin/pint --dirty --format agent`
-- [ ] T129 Purges planifiées dans `api/routes/console.php` : `passport:purge` pour les jetons expirés et `model:prune` pour les `SecurityEvent` au-delà de douze mois, **par lots**
-- [ ] T130 Limitation de débit sur les routes d'api renvoyant `429`, cohérente avec le throttle d'identification de T053 — `api/routes/api.php` et `api/technical/framework/src/Providers/FrameworkServiceProvider.php`
-- [ ] T131 Vérifier les objectifs du plan : `/oauth/token` sous 300 ms au p95, bascule d'une application à l'autre sous 5 s (SC-002), en instrumentant les routes de `api/technical/oidc/routes/`
-- [ ] T132 Relancer `sail artisan osdd:phpunit` depuis `api/`, vérifier `api/phpunit.xml`, puis la suite complète `./vendor/bin/sail test` — toutes les couches passent
+- [X] T127 [P] Revue des fichiers de traduction `api/technical/oidc/lang/` et des couches fonctionnelles — aucun texte utilisateur en dur nulle part
+- [X] T128 [P] Formater tout le diff depuis `api/` : `./vendor/bin/sail exec laravel.test vendor/bin/pint --dirty --format agent`
+- [X] T129 Purges planifiées dans `api/routes/console.php` : `passport:purge` pour les jetons expirés et `model:prune` pour les `SecurityEvent` au-delà de douze mois, **par lots**
+- [X] T130 Limitation de débit sur les routes d'api renvoyant `429`, cohérente avec le throttle d'identification de T053 — `api/routes/api.php` et `api/technical/framework/src/Providers/FrameworkServiceProvider.php`
+- [X] T131 Vérifier les objectifs du plan : `/oauth/token` sous 300 ms au p95, bascule d'une application à l'autre sous 5 s (SC-002), en instrumentant les routes de `api/technical/oidc/routes/`
+- [X] T132 Relancer `sail artisan osdd:phpunit` depuis `api/`, vérifier `api/phpunit.xml`, puis la suite complète `./vendor/bin/sail test` — toutes les couches passent
 - [ ] T133 Dérouler [quickstart.md](./quickstart.md) de bout en bout, les cinq blocs de scénarios, depuis la racine du workspace avec `api/` démarré sous Sail
 - [ ] T134 Vérifier avec `git -C mobile status` qu'**aucun commit n'a atterri dans `mobile`** (research.md D14), et que `api` est sur sa branche de feature, propre et poussée — `speckit.multirepo.status` rend ce rapport par dépôt
 
