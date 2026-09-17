@@ -305,7 +305,7 @@ vérifier l'autre ; puis désactiver un compte avec des sessions ouvertes et mes
 - [X] T131 Vérifier les objectifs du plan : `/oauth/token` sous 300 ms au p95, bascule d'une application à l'autre sous 5 s (SC-002), en instrumentant les routes de `api/technical/oidc/routes/`
 - [X] T132 Relancer `sail artisan osdd:phpunit` depuis `api/`, vérifier `api/phpunit.xml`, puis la suite complète `./vendor/bin/sail test` — toutes les couches passent
 - [ ] T133 Dérouler [quickstart.md](./quickstart.md) de bout en bout, les cinq blocs de scénarios, depuis la racine du workspace avec `api/` démarré sous Sail
-- [ ] T134 Vérifier avec `git -C mobile status` qu'**aucun commit n'a atterri dans `mobile`** (research.md D14), et que `api` est sur sa branche de feature, propre et poussée — `speckit.multirepo.status` rend ce rapport par dépôt
+- [X] T134 Vérifier avec `git -C mobile status` qu'**aucun commit n'a atterri dans `mobile`** (research.md D14), et que `api` est sur sa branche de feature, propre et poussée — `speckit.multirepo.status` rend ce rapport par dépôt
 
 ---
 
