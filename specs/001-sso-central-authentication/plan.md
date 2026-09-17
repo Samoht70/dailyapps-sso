@@ -71,32 +71,31 @@ par la même application.
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**La porte n'a pas pu se fermer : il n'y a pas de constitution.** `.specify/memory/constitution.md`
-est encore le gabarit vierge livré par `specify init` — `[PRINCIPLE_1_NAME]`, `[SECTION_2_CONTENT]`,
-`[GOVERNANCE_RULES]`. Aucun principe n'y est ratifié, donc aucun ne peut être violé, et le contrôle
-ne prouve rien. Je le signale plutôt que de cocher une case vide.
+**La porte est instruite contre la constitution v1.0.0** (ratifiée le 2026-09-17), qui a remplacé le
+gabarit vierge sur lequel la version précédente de ce plan butait. Les six principes sont confrontés
+un par un, comme la gouvernance l'exige — la porte se nomme, elle ne se coche pas.
 
-Ce qui joue le rôle de garde-fou en attendant, et que ce plan respecte :
+| Principe | Ce qu'il impose | Comment ce plan s'y tient |
+|----------|-----------------|---------------------------|
+| **I.** Une seule source de vérité | Le croisement licence × accès × état du compte × état de l'organisation est calculé ici, jamais recomposé par le consommateur | `/me/applications` projette ce croisement côté point central (contrat `admin-api.md`) ; les applications reçoivent des *claims*, aucune table à synchroniser. C'est la raison de l'écart n°2 du tableau de complexité |
+| **II.** Le standard, jamais le sur-mesure | OIDC sur OAuth 2.0, *authorization code* + PKCE obligatoire ; raccorder une application = déclarer un client | `laravel/passport` ^13.8 + `jeremy379/laravel-openid-connect` ^3.3 ; aucun endpoint dédié à une application ; US4 se réduit à déclarer un client et ses rôles |
+| **III.** Refus par défaut, jamais sur un nom de rôle | Vérification par permission ; rôles applicatifs et permissions distincts | D6 sépare les permissions spatie de l'api des `ApplicationRole` du catalogue ; périmètres par `lomkit/laravel-access-control` |
+| **IV.** Révocation immédiate et traçable | Coupure sous une minute, tout événement de sécurité journalisé | Jetons courts (15 min), rotation des *refresh*, *back-channel logout* poussé par la file — l'écart n°1 du tableau de complexité ; couche `technical/audit` avec rétention explicite par `Prunable` |
+| **V.** Le code vit en couches OSDD | Pas de `app/`, `database/` ni `config/` à la racine ; événements et listeners, jamais d'observer | 6 couches — 2 étendues, 4 nouvelles ; la configuration Passport atterrit dans `technical/oidc/config/`, chargée par `mergeConfigFrom()` ; réactions au cycle de vie par listeners déclarés dans les providers de couche |
+| **VI.** Rien n'est livré sans test | Couverture avant de considérer la tâche faite, une seule suite PHPUnit, factories jamais fixtures | D13 ; `Livewire::test(...)` dans la même suite ; factories par le helper `faker()` |
 
-| Contrainte de fait | Origine | Comment le plan s'y tient |
-|--------------------|---------|---------------------------|
-| Laravel + Livewire est la stack par défaut | `global:default-project-stack` | plus de dérogation Nuxt ; les écrans sont Livewire dans l'api |
-| Architecture en couches OSDD | `laravel:osdd-scaffolding`, échafaudage existant | 6 couches, aucune fonctionnalité hors couche, pas de `app/` à la racine |
-| Cinq paquets obligatoires | `laravel:preferred-packages` | déjà installés ; CRUD par `lomkit/laravel-rest-api`, périmètres par `lomkit/laravel-access-control`, factories par `faker()` |
-| Vérification par permission, jamais par nom de rôle | `laravel:permissions-not-roles` | D6 sépare permissions spatie et rôles applicatifs |
-| Pas de cascade en base | `laravel:no-cascade-delete` | aucun `onDelete('cascade')` ; cycles de vie plutôt que suppressions |
-| Pas d'observers | `laravel:no-observers` | événements + listeners déclarés dans les service providers de couche |
-| Pas de HTML dans du PHP | `laravel:no-html-in-php` | le balisage vit en Blade, jamais concaténé dans une classe |
-| Pas de texte en dur | `laravel:no-hardcoded-user-text` | les messages des cinq écrans passent par les fichiers de traduction |
-| Pas de documentation projet | `global:no-project-docs` | rien créé hors `specs/` ; le `CLAUDE.md` du workspace est mis à jour, pas augmenté |
-| Toute fonctionnalité neuve est testée | `global:test-new-features` | D13, une seule suite PHPUnit |
-| `staging` est le tronc | `CLAUDE.md` du workspace | branche coupée de `staging` par `speckit.multirepo.branch` |
+Les contraintes techniques et de sécurité du document sont tenues de la même façon : pas de
+`onDelete('cascade')` (statuts par énumérations applicatives, cascades par listener sur `deleting`),
+secret d'application haché et montré une fois, message d'échec qui ne révèle pas l'existence d'un
+compte, balisage en Blade, textes en fichiers de traduction, rien créé hors de `specs/`, tout passe
+par `./vendor/bin/sail`.
 
-**Action recommandée avant `/speckit-implement`** : lancer `/speckit-constitution` pour ratifier ces
-principes. Un SSO est la brique où une règle non écrite coûte le plus cher.
+**Écarts déclarés** : deux, tous deux au « paquets avant code », instruits dans le tableau de
+complexité plus bas comme le document l'impose — le *back-channel logout* et `/me/applications`.
+Aucun écart aux six principes.
 
-**Re-contrôle après phase 1** : inchangé. La conception n'introduit aucun écart à ces contraintes, et
-la bascule en monolithe en lève une — la dérogation à la stack par défaut.
+**Re-contrôle après phase 1** : inchangé. La conception n'introduit aucun écart supplémentaire, et
+la bascule en monolithe Livewire aligne le plan sur la contrainte de stack du document.
 
 ## Project Structure
 
@@ -171,9 +170,9 @@ dépôts de `repos.yml` — il en reste deux, et **aucun commit ne doit atterrir
 
 ## Complexity Tracking
 
-Pas de violation à justifier : il n'y a pas de constitution à violer (voir Constitution Check). Deux
-écarts au « tout vient d'un paquet » méritent toutefois d'être tracés ici, parce qu'ils représentent
-l'essentiel du code non trivial à écrire.
+Aucun écart aux six principes de la constitution. Restent deux écarts à la contrainte « paquets avant
+code », que le document impose précisément de justifier ici, et qui représentent l'essentiel du code
+non trivial à écrire.
 
 | Écart | Pourquoi nécessaire | Alternative plus simple, et pourquoi écartée |
 |-------|---------------------|----------------------------------------------|
@@ -182,10 +181,9 @@ l'essentiel du code non trivial à écrire.
 
 ## Ce que ce plan laisse ouvert
 
-1. **La constitution n'est pas écrite.** `/speckit-constitution` avant d'implémenter.
-2. **Vues et Livewire dans une couche OSDD** ne sont pas documentés en amont. À éprouver sur la
-   première couche concernée plutôt qu'à découvrir en fin de parcours.
-3. **Le dépôt `mobile` reste déclaré** dans `repos.yml` alors qu'aucune feature ne le vise. Le retirer
+1. **Vues et Livewire dans une couche OSDD** ne sont pas documentés en amont. À éprouver sur la
+   première couche concernée plutôt qu'à découvrir en fin de parcours. *Levé par le spike T009.*
+2. **Le dépôt `mobile` reste déclaré** dans `repos.yml` alors qu'aucune feature ne le vise. Le retirer
    est une décision distincte, à prendre quand la première application métier sera spécifiée.
 
 *La contrainte de domaine parent partagé, ouverte dans la version précédente de ce plan, n'existe

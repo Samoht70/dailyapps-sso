@@ -20,7 +20,7 @@ git -C api status --short                     # rien ne doit traîner avant de c
 ./api/vendor/bin/sail artisan key:generate
 ./api/vendor/bin/sail artisan migrate
 ./api/vendor/bin/sail artisan passport:keys   # clés de signature des jetons
-./api/vendor/bin/sail artisan db:seed         # organisation exploitant, compte d'amorçage
+./api/vendor/bin/sail artisan osdd:seed       # organisation exploitant, compte d'amorçage
 ./api/vendor/bin/sail npm run build           # Vite + Tailwind 4 pour les écrans
 ```
 
@@ -36,6 +36,10 @@ de déconnexion du scénario US5 ne partira jamais :
 ```bash
 ./api/vendor/bin/sail test
 ```
+
+`osdd:seed` et non `db:seed` : il n'y a pas de `database/` à la racine, donc pas de
+`DatabaseSeeder` — la commande OSDD enchaîne les seeders déclarés par chaque couche, dans l'ordre de
+leur priorité.
 
 Une seule suite pour tout, écrans compris — les composants Livewire se testent avec
 `Livewire::test(...)`. Après avoir créé une couche, resynchroniser :
