@@ -245,20 +245,20 @@ terme sans aucune intervention sur le point central.
 
 ### Tests for User Story 4
 
-- [ ] T102 [P] [US4] Feature test dans `api/functional/catalog/tests/Feature/ApplicationOnboardingTest.php` : déclarer, publier, puis mener un flux d'identification complet avec ce nouveau client **sans toucher à la configuration ni redéployer**
-- [ ] T103 [P] [US4] Feature test dans `api/functional/catalog/tests/Feature/ClientSecretRotationTest.php` : après rotation l'ancien secret est refusé, les autres applications continuent de fonctionner ; le secret n'est **affiché qu'une seule fois**
-- [ ] T104 [P] [US4] Feature test dans `api/functional/catalog/tests/Feature/ApplicationRetirementTest.php` : une application retirée disparaît des droits répondus, **sans que l'historique de ses accès passés soit perdu**
+- [X] T102 [P] [US4] Feature test dans `api/functional/catalog/tests/Feature/ApplicationOnboardingTest.php` : déclarer, publier, puis mener un flux d'identification complet avec ce nouveau client **sans toucher à la configuration ni redéployer**
+- [X] T103 [P] [US4] Feature test dans `api/functional/catalog/tests/Feature/ClientSecretRotationTest.php` : après rotation l'ancien secret est refusé, les autres applications continuent de fonctionner ; le secret n'est **affiché qu'une seule fois**
+- [X] T104 [P] [US4] Feature test dans `api/functional/catalog/tests/Feature/ApplicationRetirementTest.php` : une application retirée disparaît des droits répondus, **sans que l'historique de ses accès passés soit perdu**
 
 ### Implementation for User Story 4
 
-- [ ] T105 [US4] Création du client Passport à la déclaration d'une application dans `api/functional/catalog/src/Actions/DeclareApplication.php` : secret haché en base, renvoyé **une seule fois**, jamais relisible
-- [ ] T106 [US4] Endpoints `POST /applications/{id}/client-secret` (rotation, secret renvoyé une seule fois) et `DELETE /applications/{id}/client-secret` (révocation) — opérations par application, **sans effet sur les autres** (FR-033) — `api/functional/catalog/src/Http/Controllers/ClientSecretController.php` et `api/routes/api.php`
-- [ ] T107 [US4] Endpoints `POST /applications/{id}/publish` et `POST /applications/{id}/retire` avec les transitions gardées : `draft → published`, `published → retired`, `retired → published` ; **`retired → draft` refusée** — `api/functional/catalog/src/Http/Controllers/ApplicationLifecycleController.php` et `api/functional/catalog/src/Models/Concerns/`
-- [ ] T108 [US4] Gestion des adresses de retour sur `oauth_clients.redirect_uris` depuis la ressource Application — jamais dupliquées sur la table `applications`, redoubler la liste garantirait qu'un jour les deux divergent — `api/functional/catalog/src/Rest/Resources/ApplicationResource.php`
-- [ ] T109 [US4] Retrait du catalogue excluant l'application des droits répondus par T074 et T072, **sans supprimer les `ApplicationAccess` passés** (FR-032), par l'expression de validité de `api/functional/licensing/src/Models/Concerns/`
-- [ ] T110 [US4] Listener sur l'événement `deleting` d'un `ApplicationRole` détachant les attributions correspondantes, parcours au `cursor()` — **aucun `onDelete('cascade')`**, sinon les listeners des lignes enfants sont silencieusement sautés — `api/functional/catalog/src/Listeners/DetachRolesOnApplicationRoleDeleting.php`
-- [ ] T111 [US4] `SecurityEvent` `application_published`, `application_retired` et `client_secret_rotated` émis depuis `api/functional/catalog/src/Actions/`
-- [ ] T112 [US4] Un client dont le secret est révoqué est rejeté par le point central **sans effet sur les autres applications raccordées** — `api/functional/catalog/src/Actions/RevokeClientSecret.php`
+- [X] T105 [US4] Création du client Passport à la déclaration d'une application dans `api/functional/catalog/src/Actions/DeclareApplication.php` : secret haché en base, renvoyé **une seule fois**, jamais relisible
+- [X] T106 [US4] Endpoints `POST /applications/{id}/client-secret` (rotation, secret renvoyé une seule fois) et `DELETE /applications/{id}/client-secret` (révocation) — opérations par application, **sans effet sur les autres** (FR-033) — `api/functional/catalog/src/Http/Controllers/ClientSecretController.php` et `api/routes/api.php`
+- [X] T107 [US4] Endpoints `POST /applications/{id}/publish` et `POST /applications/{id}/retire` avec les transitions gardées : `draft → published`, `published → retired`, `retired → published` ; **`retired → draft` refusée** — `api/functional/catalog/src/Http/Controllers/ApplicationLifecycleController.php` et `api/functional/catalog/src/Models/Concerns/`
+- [X] T108 [US4] Gestion des adresses de retour sur `oauth_clients.redirect_uris` depuis la ressource Application — jamais dupliquées sur la table `applications`, redoubler la liste garantirait qu'un jour les deux divergent — `api/functional/catalog/src/Rest/Resources/ApplicationResource.php`
+- [X] T109 [US4] Retrait du catalogue excluant l'application des droits répondus par T074 et T072, **sans supprimer les `ApplicationAccess` passés** (FR-032), par l'expression de validité de `api/functional/licensing/src/Models/Concerns/`
+- [X] T110 [US4] Listener sur l'événement `deleting` d'un `ApplicationRole` détachant les attributions correspondantes, parcours au `cursor()` — **aucun `onDelete('cascade')`**, sinon les listeners des lignes enfants sont silencieusement sautés — `api/functional/catalog/src/Listeners/DetachRolesOnApplicationRoleDeleting.php`
+- [X] T111 [US4] `SecurityEvent` `application_published`, `application_retired` et `client_secret_rotated` émis depuis `api/functional/catalog/src/Actions/`
+- [X] T112 [US4] Un client dont le secret est révoqué est rejeté par le point central **sans effet sur les autres applications raccordées** — `api/functional/catalog/src/Actions/RevokeClientSecret.php`
 
 **Checkpoint**: les quatre premières histoires fonctionnent chacune indépendamment.
 
