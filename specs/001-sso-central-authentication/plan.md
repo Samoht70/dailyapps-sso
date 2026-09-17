@@ -25,6 +25,18 @@ Le dépôt `mobile` n'est pas touché.
 
 Le détail des arbitrages est dans [research.md](./research.md).
 
+## Affected Repos
+
+<!-- speckit-multirepo:begin -->
+
+| Repo | Rôle dans la feature |
+|------|----------------------|
+| api  | Livre la totalité de la feature : couches OSDD, écrans Livewire, /oauth/* |
+
+<!-- speckit-multirepo:end -->
+
+`mobile` n'est pas touché : aucun commit ne doit y atterrir.
+
 ## Technical Context
 
 **Language/Version**: PHP 8.4. Dart 3.13 dans `mobile`, non touché.
