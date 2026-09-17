@@ -40,11 +40,6 @@ repos:
     trunk: staging
     stack: Laravel
 
-  - dir: front
-    url: https://github.com/Samoht70/dailyapps-sso-front.git
-    trunk: staging
-    stack: Nuxt
-
   - dir: mobile
     url: https://github.com/Samoht70/dailyapps-sso-mobile.git
     trunk: staging

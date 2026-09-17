@@ -8,15 +8,25 @@ of this directory by `./bootstrap`.
 .                  ← you are here: .specify/, specs/, repos.yml. No application code.
 ├── specs/         ← one directory per feature, created by /speckit-specify
 ├── repos.yml      ← which repos make up this workspace (source of truth)
-├── api/           ← independent clone, own remote and branches — Laravel
-├── front/         ← independent clone — Nuxt
+├── api/           ← independent clone, own remote and branches — Laravel + Livewire
 └── mobile/        ← independent clone — Flutter
 ```
 
-This workspace names its children `api`, `front` and `mobile` rather than the
-conventional `back`, `web`, `mobile`. The front is Nuxt rather than Livewire —
-a workspace exists because the product spans repositories, which is exactly the
-case a Livewire monolith is not.
+This workspace names its children `api` and `mobile` rather than the
+conventional `back` and `mobile`.
+
+There was a third child, `front`, a Nuxt repo. It is gone: feature 001 scoped
+the portal and the administration screens out of this product, which left the
+front holding five form pages — login, forgot password, reset, invitation,
+profile. Those live in `api` as Livewire, Xefi's default stack, so that the
+login screen and `/oauth/authorize` share an origin and a session rather than
+negotiating a cookie across two domains.
+
+It is gone for good: `./bin/repos remove front` dropped it from the manifest,
+the GitHub repository was deleted, and the local clone with it. Nothing of it
+survives — the Nuxt OSDD wiring, the `laravel-raom-nuxt` plugin and the Docker
+Compose setup it held would have to be rebuilt from scratch. Worth knowing the
+day a portal or another web front needs a Nuxt scaffold.
 
 Run `./bin/repos list` for the current set — directory, remote, trunk branch and
 stack. `repos.yml` is authoritative and this file does not repeat it, so the two
@@ -66,8 +76,8 @@ affect application code. It won't. Use `git -C <repo>`.
 ## Writing code
 
 Every path you write — in `plan.md`, in `tasks.md`, in tool calls — starts with
-the repo directory: `api/app/...`, never a bare `app/...`. There is no default
-repo in a workspace.
+the repo directory: `api/functional/users/...`, never a bare `functional/...`.
+There is no default repo in a workspace, even when only one of them is active.
 
 Each child carries its own conventions. **Read the `CLAUDE.md` inside a repo
 before changing anything in it** — its stack, test runner and commit conventions
